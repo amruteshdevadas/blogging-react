@@ -1,0 +1,5 @@
+.featuredPosts:hover{
+    transform: scale(1.05);
+    transition: ease-in-out;
+    box-shadow: 5px 10px 5px #888888;
+}

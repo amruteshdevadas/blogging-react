@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "..\\.."
+		}
+	],
+	"settings": {
+		"peacock.lightForegroundColor": "",
+		"peacock.darkForegroundColor": "",
+		"peacock.showColorInStatusBar": false
+	}
+}

@@ -1,0 +1,97 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+body{
+    font-family: Arial;
+    background: #9D50BB;  
+    background: -webkit-linear-gradient(to right, #6E48AA, #9D50BB);  
+    background: linear-gradient(to right, #6E48AA, #9D50BB); 
+    color: #fff;
+    line-height: 20px;
+}
+
+img{
+	height: 100px;
+	margin-top: 25px;
+	position: absolute;
+	z-index: 2;
+	border: 5px solid #6E48AA;
+}
+
+.photo{
+	border-radius: 50%;
+	margin-left: 47%;
+}
+
+.profile{
+	display: inline-block;
+	border: 2px solid transparent;
+	box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+	max-width: 75%;
+	height: 300px;
+	margin-top: 85px;
+	margin-left: 100px;
+	border-radius: 20px;
+	padding: 70px;
+	background: #12192c;
+}
+
+.about{
+	line-height : 1.6;
+}
+
+.social-icons{
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	margin-top: -130px;
+	padding: 180px;
+	font-size: 40px;
+	flex-direction: row;
+	color: #4776E6;
+}
+.share-btn:hover{ 
+	cursor: pointer;
+    transition: all ease-in-out 300ms;
+    transform: translate(0px, -5px) scale(1);
+}
+
+.buttons{
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	margin-top: -20%;
+	padding: 100px;
+}
+
+.contact, .download{
+	text-decoration: none;
+	border: none;
+	padding: 7px;
+	border-radius: 5px;
+	text-align: center;
+	width: 100px;
+    background: #8E54E9;
+    cursor: pointer;
+    margin: 10px;
+    padding: 15px;
+    color: #6E48AA;
+    font-weight: 900;
+}
+@media only screen and (max-width: 1000px){
+	.profile{
+		margin-left: 50px;
+        width:90%;
+	}
+	.share-btn{
+		font-size: 25px;
+		display: flex;
+		justify-content: space-between;
+		padding: 20px;
+		margin-top: -45px;
+	}
+	.buttons{
+		margin-top: -250px;
+	}
+}
+
