@@ -40,7 +40,7 @@ function UserProfile(props) {
             width="100"
             src={
               user.avatar
-                ? `https://blogging-b251-wd.herokuapp.com/${user.avatar}`
+                ? `${user.avatar}`
                 : "https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814049__340.png"
             }
           />
