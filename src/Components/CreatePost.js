@@ -127,6 +127,8 @@ import { getSuggestedQuery } from "@testing-library/dom";
 
 
 function CreatePost() {
+  const [selectedFile, setSelectedFile] = useState('');
+  const [fileInputState, setFileInputState] = useState('');
   const [showMessage,setShowMessage]=useState(false)
   const [message,setMessage] =useState("")
   let history = useHistory();
@@ -149,10 +151,42 @@ function CreatePost() {
     });
   }  
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if(file)
+    {
+      setSelectedFile(file);
+      setFileInputState(e.target.value);
+    }   
+  };
+
   const addDetails = async (event) => {
     event.preventDefault();
-    console.log(userInfo)
-    let newPost = userInfo
+    if (selectedFile) 
+    {
+      const reader = new FileReader();
+      reader.readAsDataURL(selectedFile);
+      reader.onloadend = () => {
+          uploadImage(reader.result);
+      };
+      reader.onerror = () => {
+          setMessage('something went wrong!');
+          setShowMessage(true)
+      };
+    }
+    else{
+      uploadImage(null)
+    }
+  } 
+
+  const uploadImage = async (base64image)=>{
+   
+    let newPost = {
+      title: userInfo.title,
+      content: userInfo.content,
+      image: base64image
+    }
+
    await axios.post('https://blogging-b251-wd.herokuapp.com/post/createPost',
     {newPost},
     {headers:{ authorization:window.localStorage.getItem("token")}
@@ -170,7 +204,7 @@ function CreatePost() {
   setShowMessage(true)
   setSeverity("success")
 })
-  } 
+  }
 
   useEffect(() => {
     getUser()
@@ -229,14 +263,15 @@ return (
             />
             
             <br />
-            <TextField
+            <input
               id="outlined-multiline-flexible"
               placeholder="Enter your Image URL"
-              value={userInfo.image}
-              onChange={onChangeValue}
+              value={fileInputState}
+              onChange={handleFileChange}
               name="image"
-              fullWidth
+              type="file"
             />
+
             <Box mt={2}>      
                <Button type="submit" variant="contained">Publish</Button>    
               </Box>

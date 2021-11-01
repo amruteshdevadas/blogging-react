@@ -12,17 +12,30 @@ function Settings() {
     avatar:"",
     about:""
   });
-  const [file, setFile] = useState(null);
+  
+  const [selectedFile, setSelectedFile] = useState('');
+  const [fileInputState, setFileInputState] = useState('');
   const [message,setMessage] = useState("")
   const [login, setLogin] =useState(false)
   const [openMessage,setOpenMessage]=useState(false)
   const [severity,setSeverity] = useState('error')
+  const [previewSource, setPreviewSource] = useState('');
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormvalues({
       ...formvalues,
       [name]: value,
     });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if(file)
+    {
+      setSelectedFile(file);
+      previewFile(file);
+      setFileInputState(e.target.value);
+    }   
   };
 
   useEffect(() => {
@@ -36,7 +49,6 @@ function Settings() {
       })
       .then((response) => {
         setFormvalues(response.data);
-        setFile(response.data.avatar)
         setLogin(true)
       })
       .catch((error) => {
@@ -45,34 +57,62 @@ function Settings() {
         setOpenMessage(true)
       });
   }
+
+  const previewFile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+        setPreviewSource(reader.result);
+    };
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("avatar", file);
-    formData.append("userName",formvalues.userName)
-    formData.append("about",formvalues.about)
-    await axios
-      .post("https://blogging-b251-wd.herokuapp.com/authors/settings", formData, {
-        headers: {
-          authorization: window.localStorage.getItem("token"),
-          "content-type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        setOpenMessage(true)
-        setMessage("Updated Successfully")
-        setSeverity('success')
-        fetchList()
-      })
-      .catch((error) => {
-        console.log(error);
-        
-      });
+        if (selectedFile) 
+        {
+          const reader = new FileReader();
+          reader.readAsDataURL(selectedFile);
+          reader.onloadend = () => {
+              uploadImage(reader.result);
+          };
+          reader.onerror = () => {
+              setMessage('something went wrong!');
+              setOpenMessage(true)
+          };
+        }
+        else{
+          uploadImage(null)
+        }
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const uploadImage = async (base64EncodedImage) => {
+    const userData={
+        avatar:base64EncodedImage,
+        userName:formvalues.userName,
+        about :formvalues.about
+      }
+  
+          await axios
+            .post("https://blogging-b251-wd.herokuapp.com/authors/settings", {data:userData},{
+              headers: {
+                authorization: window.localStorage.getItem("token"),
+                "Content-type": "application/json",
+              }
+            })
+            .then((response) => {
+              setOpenMessage(true)
+              setMessage(response.data)
+              setSeverity('success')
+              fetchList()
+              setPreviewSource(null)
+            })
+            .catch((error) => {
+              console.log(error);
+              
+            });
+};
+
+  
   return (
     <>
       <NavBar data="Settings Page" />
@@ -104,7 +144,11 @@ function Settings() {
             <Box mt={2}>
             <label htmlFor="avatar">Edit your image (Max 1MB only JPEG Or Png.) </label>
             <br/>
-            <input type="file" name="avatar" onChange={handleFileChange}/>
+            <input type="file" 
+            name="avatar" 
+            onChange={handleFileChange}
+            value={fileInputState}
+            />
             </Box>
             
             <Box mt={2}>
@@ -117,6 +161,13 @@ function Settings() {
 }
           </Grid>
         </Box>
+        {previewSource && (
+                <img
+                    src={previewSource}
+                    alt="chosen"
+                    style={{ height: '300px' }}
+                />
+            )}
       </form>
     </>
   );
